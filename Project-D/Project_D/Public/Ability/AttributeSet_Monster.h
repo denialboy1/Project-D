@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Ability/AttributeSet_Character.h"
+#include "AttributeSet_Character.h"
 #include "AttributeSet_Monster.generated.h"
 
 /**

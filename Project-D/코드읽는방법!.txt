@@ -1,0 +1,6 @@
+BaseCharacter -> PlayerCharacter ->ArcherCharacter
+
+GA : GameAbility => 플레이어에게 능력주는 클래스
+GE : GameEffect => GameAbility CoolTime 지정 or Cost 부여하는 클래스
+
+아쳐 동작 대부분 몽타주로 실행시켜서 스킬 발동하고 있습니다.

@@ -14,7 +14,7 @@
 #include "BehaviorTree/BlackboardData.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "ConstructorHelpers.h"
-#include "Ability/Player_Character.h"
+//#include "Project_D_Character/Player_Character.h"
 #include "PD_AIController.generated.h"
 
 /**
@@ -93,6 +93,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool isDead;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	APlayer_Character* Target;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//APlayer_Character* Target;
 };

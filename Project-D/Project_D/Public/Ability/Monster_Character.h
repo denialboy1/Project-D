@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Ability/BaseCharacter.h"
-#include "Ability/AttributeSet_Monster.h"
+#include "BaseCharacter.h"
+#include "AttributeSet_Monster.h"
 #include "Monster_Character.generated.h"
 
 /**
