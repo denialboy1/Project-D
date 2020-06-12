@@ -1,6 +1,0 @@
-BaseCharacter -> PlayerCharacter ->ArcherCharacter
-                                         ->MagicianCharacter
-
-GA : GameAbility => 플레이어에게 능력주는 클래스
-GE : GameEffect => GameAbility CoolTime 지정 or Cost 부여하는 클래스
-

@@ -1,0 +1,23 @@
+모듈 : Project_D, Project_D_Ability, Project_D_Character
+
+DefaultGameplayTags.ini : Tag목록이 들어있는 파일
+
+Project_D.Target.cs : 실제 게임 관련 Module 목록 보관
+
+Project_DEditor.Target.cs : 엔진 관련 Moduler 목록 보관
+
+*.Build.cs : 각 모듈이 참조하는 
+
+
+상속 순서
+BaseCharacter -> PlayerCharacter ->ArcherCharacter
+                                         ->MagicianCharacter
+
+파일명 축약 네임
+GA : GameAbility => 플레이어에게 능력주는 클래스
+GE : GameEffect => GameAbility CoolTime 지정 or Cost 부여하는 클래스
+
+
+
+
+
