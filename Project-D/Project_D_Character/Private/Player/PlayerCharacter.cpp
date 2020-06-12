@@ -146,6 +146,7 @@ void APlayerCharacter::BeginPlay()
 
 /////////////////////////////////////////    Tick      //////////////////////////////////////////////////
 void APlayerCharacter::Tick(float DeltaTime) {
+	Super::Tick(DeltaTime);
 	//회피기 타이머
 	RollTimeUpdate(DeltaTime);
 

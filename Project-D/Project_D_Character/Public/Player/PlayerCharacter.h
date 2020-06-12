@@ -53,34 +53,34 @@ protected:
 
 	//카메라
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class USpringArmComponent* CameraBoom;
+	class USpringArmComponent* CameraBoom;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class UCameraComponent* FollowCamera;
+	class UCameraComponent* FollowCamera;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
-		float BaseTurnRate;
+	float BaseTurnRate;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
-		float BaseLookUpRate;
+	float BaseLookUpRate;
 
 
 
 	//캐릭터 이동
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Character)
-		float MaxSpeed;
+	float MaxSpeed;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Character)
-		float CurMoveForward;
+	float CurMoveForward;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Character)
-		float CurMoveRight;
+	float CurMoveRight;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Character)
-		float PreMoveForward;
+	float PreMoveForward;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Character)
-		float PreMoveRight;
+	float PreMoveRight;
 
 
 
@@ -95,44 +95,44 @@ protected:
 
 	//인터렉션
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Interaction)
-		class UBoxComponent* Interaction;
+	class UBoxComponent* Interaction;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Interaction)
-		class AActor* InteractionActor;
+	class AActor* InteractionActor;
 
-	
+
 
 	//어빌리티
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameplayAbility)
-		TSubclassOf<UGameplayAbility> WeaponAttack;
+	TSubclassOf<UGameplayAbility> WeaponAttack;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameplayAbility)
-		TSubclassOf<UGameplayAbility> Combo1;
+	TSubclassOf<UGameplayAbility> Combo1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameplayAbility)
-		TSubclassOf<UGameplayAbility> Combo2;
+	TSubclassOf<UGameplayAbility> Combo2;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameplayAbility)
-		TSubclassOf<UGameplayAbility> UseSpell1;
+	TSubclassOf<UGameplayAbility> UseSpell1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameplayAbility)
-		TSubclassOf<UGameplayAbility> UseSpell2;
+	TSubclassOf<UGameplayAbility> UseSpell2;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameplayAbility)
-		TSubclassOf<UGameplayAbility> UseSpell3;
+	TSubclassOf<UGameplayAbility> UseSpell3;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameplayAbility)
-		TSubclassOf<UGameplayAbility> UseSpell4;
+	TSubclassOf<UGameplayAbility> UseSpell4;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameplayAbility)
-		TSubclassOf<UGameplayAbility> SpecialCommand;
+	TSubclassOf<UGameplayAbility> SpecialCommand;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameplayAbility)
-		TSubclassOf<UGameplayAbility> Roll_Ability;
-	
+	TSubclassOf<UGameplayAbility> Roll_Ability;
+
 	//추가로 스킬을 넣을 때 사용
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameplayAbility)
-		TArray<TSubclassOf<UGameplayAbility>> ExtraSkill;
+	TArray<TSubclassOf<UGameplayAbility>> ExtraSkill;
 
 
 
@@ -166,10 +166,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Alive)
 	USoundWave* AliveSound;
 
-	public:
+public:
 
 private:
-	
+
 
 	void RollTimeUpdate(float DeltaTime);
 	void InvincibilityTimeUpdate(float DeltaTime);
@@ -187,7 +187,7 @@ protected:
 	//이동관련 함수
 	void MoveForward(float Value);
 	void MoveRight(float Value);
-	
+
 	//카메라 관련 함수
 	void TurnAtRate(float Rate);
 	void LookUpAtRate(float Rate);
@@ -206,7 +206,7 @@ protected:
 	virtual void Multicast_DashPressed();
 	virtual void Multicast_DashPressed_Implementation();
 	virtual bool Multicast_DashPressed_Validate() { return true; }
-	
+
 	virtual void DashReleased();
 	UFUNCTION(Server, WithValidation, Reliable)
 	virtual void ServerRPC_DashReleased();
@@ -229,7 +229,7 @@ protected:
 	virtual void Multicast_Roll_Implementation(CC PrevState);
 	virtual bool Multicast_Roll_Validate(CC PrevState) { return true; }
 
-	
+
 	//공격
 	virtual void Attack();
 	UFUNCTION(Server, WithValidation, Reliable)
@@ -240,7 +240,7 @@ protected:
 	virtual void MulticastRPC_Attack();
 	virtual void MulticastRPC_Attack_Implementation();
 	virtual bool MulticastRPC_Attack_Validate() { return true; }
-	
+
 	//특수공격
 	virtual void SpecialCommandAttack();
 	UFUNCTION(Server, WithValidation, Reliable)
@@ -312,7 +312,39 @@ protected:
 	virtual void ServerRPC_Revive(APlayerCharacter* PlayerCharacter);
 	virtual void ServerRPC_Revive_Implementation(APlayerCharacter* PlayerCharacter);
 	virtual bool ServerRPC_Revive_Validate(APlayerCharacter* PlayerCharacter) { return true; }
-	
+
+	//죽음
+	UFUNCTION(Server, WithValidation, Reliable)
+	virtual void ServerRPC_Dead();
+	virtual void ServerRPC_Dead_Implementation();
+	virtual bool ServerRPC_Dead_Validate() { return true; }
+	UFUNCTION(NetMulticast, WithValidation, Reliable)
+	virtual void MulticastRPC_Dead();
+	virtual void MulticastRPC_Dead_Implementation();
+	virtual bool MulticastRPC_Dead_Validate() { return true; }
+
+
+	//살아나기
+	UFUNCTION(Server, WithValidation, Reliable)
+	virtual void ServerRPC_Alive();
+	virtual void ServerRPC_Alive_Implementation();
+	virtual bool ServerRPC_Alive_Validate() { return true; }
+	UFUNCTION(NetMulticast, WithValidation, Reliable)
+	virtual void MulticastRPC_Alive();
+	virtual void MulticastRPC_Alive_Implementation();
+	virtual bool MulticastRPC_Alive_Validate() { return true; }
+
+	//체력 조정 함수
+	void OnHealthChanged(float DeltaValue, const struct FGameplayTagContainer& EventTags) override;
+
+	UFUNCTION()
+	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+public:
+
 
 	//이동속도 증가 버프
 	UFUNCTION(Server, WithValidation, Reliable)
@@ -349,41 +381,9 @@ protected:
 	virtual bool MulticastRPC_Invincibility_Validate(float Time, CC PrevState) { return true; }
 
 
-	//죽음
-	UFUNCTION(Server, WithValidation, Reliable)
-	virtual void ServerRPC_Dead();
-	virtual void ServerRPC_Dead_Implementation();
-	virtual bool ServerRPC_Dead_Validate() { return true; }
-	UFUNCTION(NetMulticast, WithValidation, Reliable)
-	virtual void MulticastRPC_Dead();
-	virtual void MulticastRPC_Dead_Implementation();
-	virtual bool MulticastRPC_Dead_Validate() { return true; }
-
-
-	//살아나기
-	UFUNCTION(Server, WithValidation, Reliable)
-	virtual void ServerRPC_Alive();
-	virtual void ServerRPC_Alive_Implementation();
-	virtual bool ServerRPC_Alive_Validate() { return true; }
-	UFUNCTION(NetMulticast, WithValidation, Reliable)
-	virtual void MulticastRPC_Alive();
-	virtual void MulticastRPC_Alive_Implementation();
-	virtual bool MulticastRPC_Alive_Validate() { return true; }
-
-	//체력 조정 함수
-	void OnHealthChanged(float DeltaValue, const struct FGameplayTagContainer& EventTags) override;
-
-	UFUNCTION()
-	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-	UFUNCTION()
-	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
-	public:
-	
 	float GetCurMoveForward() { return CurMoveForward; }
 	float GetCurMoveRight() { return CurMoveRight; }
 
-	bool GetIsRoll(){return bIsRoll;}
+	bool GetIsRoll() { return bIsRoll; }
 	void SetIsRoll(bool _bIsRoll) { bIsRoll = _bIsRoll; }
 };

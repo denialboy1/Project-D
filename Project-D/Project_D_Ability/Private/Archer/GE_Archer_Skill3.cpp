@@ -5,6 +5,6 @@
 
 UGE_Archer_Skill3::UGE_Archer_Skill3() {
 	DurationPolicy = EGameplayEffectDurationType::HasDuration;
-	DurationMagnitude = FGameplayEffectModifierMagnitude(FScalableFloat(4.0f));
-	Period.SetValue(4.0f);
+	DurationMagnitude = FGameplayEffectModifierMagnitude(FScalableFloat(8.0f));
+	Period.SetValue(8.0f);
 }

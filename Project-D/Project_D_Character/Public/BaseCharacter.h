@@ -29,6 +29,8 @@ class PROJECT_D_CHARACTER_API ABaseCharacter : public ACharacter, public IAbilit
 private:
 
 protected:
+
+	//어빌리티 시스템 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Abilities)
 	UAbilitySystemComponent* AbilitySystemComponent;
 
@@ -40,10 +42,13 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsAlive;
-
+	
+	//캐릭터 죽는 애니메이션 몽타주
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UAnimMontage* DeadAnimMontage;
 
+
+	//캐릭터 CC 관련 변수
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	CC CharacterState;
 
