@@ -1,10 +1,10 @@
 // Team Project D has all rights this game
 
 
-#include "GA_Magician_Roll.h"
+#include "Magician/GA_Magician_Roll.h"
 #include "UObject/ConstructorHelpers.h"
-#include "MagicianAnimInstance.h"
-#include "MagicianCharacter.h"
+#include "Magician/MagicianAnimInstance.h"
+#include "Magician/MagicianCharacter.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "AbilitySystemComponent.h"
 
@@ -14,18 +14,18 @@ UGA_Magician_Roll::UGA_Magician_Roll() {
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> Montage(TEXT("AnimMontage'/Game/Characters/Player/Magician/Animation/AM_Magician_Roll.AM_Magician_Roll'"));
 	if (Montage.Succeeded()) {
 		MontageToPlay = Montage.Object;
-
-		ReplicationPolicy = EGameplayAbilityReplicationPolicy::Type::ReplicateYes;
-		InstancingPolicy = EGameplayAbilityInstancingPolicy::Type::InstancedPerExecution;
-		bServerRespectsRemoteAbilityCancellation = true;
-		NetExecutionPolicy = EGameplayAbilityNetExecutionPolicy::Type::ServerOnly;
-		NetSecurityPolicy = EGameplayAbilityNetSecurityPolicy::Type::ClientOrServer;
 		UE_LOG(LogTemp, Log, TEXT("Magician Roll Anim Load Succeess"))
 	}
 	else {
 		UE_LOG(LogTemp, Log, TEXT("Magician Roll Anim Load Failed"))
 	}
 
+	//정책 설정
+	ReplicationPolicy = EGameplayAbilityReplicationPolicy::Type::ReplicateYes;
+	InstancingPolicy = EGameplayAbilityInstancingPolicy::Type::InstancedPerExecution;
+	bServerRespectsRemoteAbilityCancellation = true;
+	NetExecutionPolicy = EGameplayAbilityNetExecutionPolicy::Type::ServerOnly;
+	NetSecurityPolicy = EGameplayAbilityNetSecurityPolicy::Type::ClientOrServer;
 }
 
 void UGA_Magician_Roll::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)

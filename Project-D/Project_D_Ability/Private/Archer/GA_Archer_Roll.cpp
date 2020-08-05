@@ -1,10 +1,10 @@
 // Team Project D has all rights this game
 
 
-#include "GA_Archer_Roll.h"
+#include "Archer/GA_Archer_Roll.h"
 #include "UObject/ConstructorHelpers.h"
-#include "ArcherAnimInstance.h"
-#include "ArcherCharacter.h"
+#include "Archer/ArcherAnimInstance.h"
+#include "Archer/ArcherCharacter.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "AbilitySystemComponent.h"
 
@@ -14,17 +14,19 @@ UGA_Archer_Roll::UGA_Archer_Roll() {
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> Montage(TEXT("AnimMontage'/Game/Characters/Player/Archer/Animation/AM_Archer_Roll.AM_Archer_Roll'"));
 	if (Montage.Succeeded()) {
 		MontageToPlay = Montage.Object;
-
-		ReplicationPolicy = EGameplayAbilityReplicationPolicy::Type::ReplicateYes;
-		InstancingPolicy = EGameplayAbilityInstancingPolicy::Type::InstancedPerExecution;
-		bServerRespectsRemoteAbilityCancellation = true;
-		NetExecutionPolicy = EGameplayAbilityNetExecutionPolicy::Type::ServerOnly;
-		NetSecurityPolicy = EGameplayAbilityNetSecurityPolicy::Type::ClientOrServer;
-		UE_LOG(LogTemp, Log, TEXT("Archer Roll Anim Load Succeess"))
 	}
 	else {
 		UE_LOG(LogTemp, Log, TEXT("Archer Roll Anim Load Failed"))
 	}
+
+	//정책 설정
+	ReplicationPolicy = EGameplayAbilityReplicationPolicy::Type::ReplicateYes;
+	InstancingPolicy = EGameplayAbilityInstancingPolicy::Type::InstancedPerExecution;
+	bServerRespectsRemoteAbilityCancellation = true;
+	NetExecutionPolicy = EGameplayAbilityNetExecutionPolicy::Type::ServerOnly;
+	NetSecurityPolicy = EGameplayAbilityNetSecurityPolicy::Type::ClientOrServer;
+	UE_LOG(LogTemp, Log, TEXT("Archer Roll Anim Load Succeess"))
+
 
 }
 

@@ -15,6 +15,6 @@ DECLARE_LOG_CATEGORY_EXTERN(Project_D, Log, All)
 #define __NETWORKSESSIONTEST_H__
 
 #include "Engine.h"
-#include "UnrealNetwork.h"
+#include "Net/UnrealNetwork.h"
 #include "Online.h"
 #endif

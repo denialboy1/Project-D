@@ -4,9 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "BaseCharacter.h"
-#include "AttributeSet_Player.h"
-#include "GE_PlayerAlive.h"
-#include "GA_Resurrection.h"
+#include "Player/AttributeSet_Player.h"
+#include "Player/GE_PlayerAlive.h"
+#include "Player/GA_Resurrection.h"
 #include "Components/BoxComponent.h"
 #include "Particles/ParticleSystem.h"
 #include "Kismet/GameplayStatics.h"
@@ -85,7 +85,7 @@ protected:
 
 
 	//캐릭터 회피
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Character)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Character)
 	bool bIsRoll;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Character)
@@ -135,7 +135,6 @@ protected:
 	TArray<TSubclassOf<UGameplayAbility>> ExtraSkill;
 
 
-
 	//버프 파티클
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Buff)
 	UParticleSystemComponent* SpeedUpFX_Component;
@@ -149,11 +148,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Buff)
 	UParticleSystem* SlowFX;
 
-
-
 	//죽음
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Dead)
 	UParticleSystemComponent* DeadFX_Component;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Alive)
+	UParticleSystem* DeadFX;
 
 
 	//부활
@@ -254,7 +254,7 @@ protected:
 
 
 	//스킬1
-	void Skill1();
+	virtual void Skill1();
 	UFUNCTION(Server, WithValidation, Reliable)
 	virtual void ServerRPC_Skill1();
 	virtual void ServerRPC_Skill1_Implementation();
@@ -265,7 +265,7 @@ protected:
 	virtual bool MulticastRPC_Skill1_Validate() { return true; }
 
 	//스킬2
-	void Skill2();
+	virtual void Skill2();
 	UFUNCTION(Server, WithValidation, Reliable)
 	virtual void ServerRPC_Skill2();
 	virtual void ServerRPC_Skill2_Implementation();
@@ -276,7 +276,7 @@ protected:
 	virtual bool MulticastRPC_Skill2_Validate() { return true; }
 
 	//스킬3
-	void Skill3();
+	virtual void Skill3();
 	UFUNCTION(Server, WithValidation, Reliable)
 	virtual void ServerRPC_Skill3();
 	virtual void ServerRPC_Skill3_Implementation();
@@ -287,7 +287,7 @@ protected:
 	virtual bool MulticastRPC_Skill3_Validate() { return true; }
 
 	//스킬4
-	void Skill4();
+	virtual void Skill4();
 	UFUNCTION(Server, WithValidation, Reliable)
 	virtual void ServerRPC_Skill4();
 	virtual void ServerRPC_Skill4_Implementation();
@@ -299,6 +299,7 @@ protected:
 
 
 	//상호작용
+	UFUNCTION(BlueprintCallable)
 	void InteractionAction();
 	UFUNCTION(Server, WithValidation, Reliable)
 	virtual void ServerRPC_InteractionAction();
@@ -334,8 +335,6 @@ protected:
 	virtual void MulticastRPC_Alive_Implementation();
 	virtual bool MulticastRPC_Alive_Validate() { return true; }
 
-	//체력 조정 함수
-	void OnHealthChanged(float DeltaValue, const struct FGameplayTagContainer& EventTags) override;
 
 	UFUNCTION()
 	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -357,7 +356,7 @@ public:
 	virtual bool MulticastRPC_Fast_Validate(float Time) { return true; }
 
 	//이동속도 감소 버프
-	UFUNCTION(Server, WithValidation, Reliable)
+	UFUNCTION(Server, WithValidation, Reliable, BlueprintCallable)
 	virtual void ServerRPC_Slow(float Time);
 	virtual void ServerRPC_Slow_Implementation(float Time);
 	virtual bool ServerRPC_Slow_Validate(float Time) { return true; }

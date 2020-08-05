@@ -1,23 +1,32 @@
 // Team Project D has all rights this game
 
-#include "GA_Magician_WeaponAttack.h"
-#include "MagicianCharacter.h"
+#include "Magician/GA_Magician_WeaponAttack.h"
+#include "Magician/MagicianCharacter.h"
 #include "GameplayTagsModule.h"
-#include "GA_Fire.h"
-#include "GA_Water.h"
-#include "GA_Earth.h"
-#include "GA_Air.h"
-#include "GA_FireAndAir.h"
-#include "GA_FireAndEarth.h"
-#include "GA_FireAndWater.h"
-#include "GA_WaterAndAir.h"
-#include "GA_WaterAndEarth.h"
-#include "GA_EarthAndAir.h"
+#include "Magician/Skill/GA_Fire.h"
+#include "Magician/Skill/GA_Water.h"
+#include "Magician/Skill/GA_Earth.h"
+#include "Magician/Skill/GA_Air.h"
+#include "Magician/Skill/GA_FireAndAir.h"
+#include "Magician/Skill/GA_FireAndEarth.h"
+#include "Magician/Skill/GA_FireAndWater.h"
+#include "Magician/Skill/GA_WaterAndAir.h"
+#include "Magician/Skill/GA_WaterAndEarth.h"
+#include "Magician/Skill/GA_EarthAndAir.h"
 
 
 UGA_Magician_WeaponAttack::UGA_Magician_WeaponAttack() {
-	
 
+	//몽타주 설정
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> Montage(TEXT("AnimMontage'/Game/Characters/Player/Magician/Animation/AM_Magician_WeaponAttack.AM_Magician_WeaponAttack'"));
+	if (Montage.Succeeded()) {
+		MontageToPlay = Montage.Object;
+	}
+	else {
+		UE_LOG(LogTemp, Log, TEXT("Archer Roll Anim Load Failed"))
+	}
+
+	//정책 설정
 	ReplicationPolicy = EGameplayAbilityReplicationPolicy::Type::ReplicateYes;
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::Type::InstancedPerExecution;
 	bServerRespectsRemoteAbilityCancellation = true;
@@ -27,68 +36,70 @@ UGA_Magician_WeaponAttack::UGA_Magician_WeaponAttack() {
 
 void UGA_Magician_WeaponAttack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	//Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	Character = Cast<AMagicianCharacter>(GetActorInfo().OwnerActor);
+	if (Character) {
+		Character->GetAbilitySystemComponent()->PlayMontage(this, ActivationInfo, MontageToPlay, 1.0f);
+	}
 
-	if (CommitAbility(Handle, ActorInfo, ActivationInfo)) {
-		
-		if (GetActorInfo().OwnerActor == nullptr) {
-			UE_LOG(LogTemp, Log, TEXT("Owner NULL"))
-		}
-		else {
-			Character = Cast<AMagicianCharacter>(GetActorInfo().OwnerActor);
-			UE_LOG(LogTemp, Log, TEXT("Owner not NULL"))
-		}
-		
-		if (Character == nullptr) {
-			UE_LOG(LogTemp, Log, TEXT("Magician_WeaponAttack Character NULL"))
-		}
-		else {
-			//쿼리를 이용해서 원소 비교
-			//Fire + Air
-			if (TwoElementAction("Magician.Element.Fire", "Magician.Element.Air", &Character->AllFireElement, &Character->AllAirElement, UGA_FireAndAir::StaticClass())) {}
 
-			//Fire + Earth
-			else if (TwoElementAction("Magician.Element.Fire", "Magician.Element.Earth", &Character->AllFireElement, &Character->AllEarthElement, UGA_FireAndEarth::StaticClass())) {}
+	if (GetActorInfo().OwnerActor == nullptr) {
+		UE_LOG(LogTemp, Log, TEXT("Owner NULL"))
+	}
+	else {
+		Character = Cast<AMagicianCharacter>(GetActorInfo().OwnerActor);
+		UE_LOG(LogTemp, Log, TEXT("Owner not NULL"))
+	}
 
-			//Fire + Water
-			else if (TwoElementAction("Magician.Element.Fire", "Magician.Element.Water", &Character->AllFireElement, &Character->AllWaterElement, UGA_FireAndWater::StaticClass())) {}
+	if (Character == nullptr) {
+		UE_LOG(LogTemp, Log, TEXT("Magician_WeaponAttack Character NULL"))
+	}
+	else {
+		//쿼리를 이용해서 원소 비교
+		//Fire + Air
+		if (TwoElementAction("Magician.Element.Fire", "Magician.Element.Air", &Character->AllFireElement, &Character->AllAirElement, UGA_FireAndAir::StaticClass())) {}
 
-			//Water + Air
-			else if (TwoElementAction("Magician.Element.Water", "Magician.Element.Air", &Character->AllWaterElement, &Character->AllAirElement, UGA_WaterAndAir::StaticClass())) {}
+		//Fire + Earth
+		else if (TwoElementAction("Magician.Element.Fire", "Magician.Element.Earth", &Character->AllFireElement, &Character->AllEarthElement, UGA_FireAndEarth::StaticClass())) {}
 
-			//Water + Earth
-			else if (TwoElementAction("Magician.Element.Water", "Magician.Element.Earth", &Character->AllWaterElement, &Character->AllEarthElement, UGA_WaterAndEarth::StaticClass())) {}
+		//Fire + Water
+		else if (TwoElementAction("Magician.Element.Fire", "Magician.Element.Water", &Character->AllFireElement, &Character->AllWaterElement, UGA_FireAndWater::StaticClass())) {}
 
-			//Earth + Air
-			else if (TwoElementAction("Magician.Element.Earth", "Magician.Element.Air", &Character->AllEarthElement, &Character->AllAirElement, UGA_EarthAndAir::StaticClass())) {}
+		//Water + Air
+		else if (TwoElementAction("Magician.Element.Water", "Magician.Element.Air", &Character->AllWaterElement, &Character->AllAirElement, UGA_WaterAndAir::StaticClass())) {}
 
-			//Fire
-			else if (OneElementAction("Magician.Element.Fire", &Character->AllFireElement, UGA_Fire::StaticClass())) {}
+		//Water + Earth
+		else if (TwoElementAction("Magician.Element.Water", "Magician.Element.Earth", &Character->AllWaterElement, &Character->AllEarthElement, UGA_WaterAndEarth::StaticClass())) {}
 
-			//Water
-			else if (OneElementAction("Magician.Element.Water", &Character->AllWaterElement, UGA_Water::StaticClass())) {}
+		//Earth + Air
+		else if (TwoElementAction("Magician.Element.Earth", "Magician.Element.Air", &Character->AllEarthElement, &Character->AllAirElement, UGA_EarthAndAir::StaticClass())) {}
 
-			//Earth
-			else if (OneElementAction("Magician.Element.Earth", &Character->AllEarthElement, UGA_Earth::StaticClass())) {}
+		//Fire
+		else if (OneElementAction("Magician.Element.Fire", &Character->AllFireElement, UGA_Fire::StaticClass())) {}
 
-			//Air
-			else if (OneElementAction("Magician.Element.Air", &Character->AllAirElement, UGA_Air::StaticClass())) {}
+		//Water
+		else if (OneElementAction("Magician.Element.Water", &Character->AllWaterElement, UGA_Water::StaticClass())) {}
 
-			//불 원소가 0이면 태그 제거
-			RemoveTagForZeroElement(Character->AllFireElement, UGameplayTagsManager::Get().RequestGameplayTag("Magician.Element.Fire"));
-			
-			//물 원소가 0이면 태그 제거
-			RemoveTagForZeroElement(Character->AllWaterElement, UGameplayTagsManager::Get().RequestGameplayTag("Magician.Element.Water"));
+		//Earth
+		else if (OneElementAction("Magician.Element.Earth", &Character->AllEarthElement, UGA_Earth::StaticClass())) {}
 
-			//땅 원소가 0이면 태그 제거
-			RemoveTagForZeroElement(Character->AllEarthElement, UGameplayTagsManager::Get().RequestGameplayTag("Magician.Element.Earth"));
+		//Air
+		else if (OneElementAction("Magician.Element.Air", &Character->AllAirElement, UGA_Air::StaticClass())) {}
 
-			//공기 원소가 0이면 태그 제거
-			RemoveTagForZeroElement(Character->AllAirElement, UGameplayTagsManager::Get().RequestGameplayTag("Magician.Element.Air"));
+		//불 원소가 0이면 태그 제거
+		RemoveTagForZeroElement(Character->AllFireElement, UGameplayTagsManager::Get().RequestGameplayTag("Magician.Element.Fire"));
 
-			UE_LOG(LogTemp, Log, TEXT("Magician_WeaponAttack Character not NULL"))
-		}
-	}	
+		//물 원소가 0이면 태그 제거
+		RemoveTagForZeroElement(Character->AllWaterElement, UGameplayTagsManager::Get().RequestGameplayTag("Magician.Element.Water"));
+
+		//땅 원소가 0이면 태그 제거
+		RemoveTagForZeroElement(Character->AllEarthElement, UGameplayTagsManager::Get().RequestGameplayTag("Magician.Element.Earth"));
+
+		//공기 원소가 0이면 태그 제거
+		RemoveTagForZeroElement(Character->AllAirElement, UGameplayTagsManager::Get().RequestGameplayTag("Magician.Element.Air"));
+
+		UE_LOG(LogTemp, Log, TEXT("Magician_WeaponAttack Character not NULL"))
+	}
 }
 
 void UGA_Magician_WeaponAttack::DestroyElement(TArray<AActor*>* Elements) {

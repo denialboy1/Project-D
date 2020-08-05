@@ -1,7 +1,7 @@
 // Team Project D has all rights this game
 
-#include "PlayerAnimInstance.h"
-#include "PlayerCharacter.h"
+#include "Player/PlayerAnimInstance.h"
+#include "Player/PlayerCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "Math/UnrealMathUtility.h"
 

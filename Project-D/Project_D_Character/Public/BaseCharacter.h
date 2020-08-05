@@ -92,7 +92,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	virtual void OnHealthChanged(float DeltaValue, const struct FGameplayTagContainer& EventTags);
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnHealthChanged(float DeltaValue, const struct FGameplayTagContainer& EventTags);
 
 	
 public:	
@@ -111,6 +112,7 @@ public:
 	
 	virtual void PossessedBy(AController * NewController) override;
 
+public:
 	/** Returns current health, will be 0 if dead */
 	UFUNCTION(BlueprintCallable)
 	virtual float GetHealth() const;
@@ -123,6 +125,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual float GetMoveSpeed() const;
 
+
 	UFUNCTION()
 	virtual void HandleHealthChanged(float DeltaValue, const struct FGameplayTagContainer& EventTags);
 
@@ -132,5 +135,5 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MultiHandleHealthChanged(float DeltaValue, const struct FGameplayTagContainer& EventTags);
 
-	
+	CC GetCharacterState() { return CharacterState; }
 };

@@ -8,6 +8,7 @@ public class Project_DTarget : TargetRules
 	public Project_DTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Game;
+        DefaultBuildSettings = BuildSettingsVersion.V2;
         ExtraModuleNames.AddRange(new string[] { "Project_D", "Project_D_Character", "Project_D_Ability" });
         //ExtraModuleNames.AddRange(new string[] { "Project_D_Character" });
     }

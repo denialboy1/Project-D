@@ -7,9 +7,9 @@
 UAttributeSet_Character::UAttributeSet_Character() 
 	: Health(1.f)
 	, MaxHealth(1.f)
+	, MoveSpeed(1.0f)
 	, AttackPower(1.0f)
 	, DefensePower(1.0f)
-	, MoveSpeed(1.0f)
 	, Damage(0.0f)
 {
 

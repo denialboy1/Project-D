@@ -1,6 +1,6 @@
 // Team Project D has all rights this game
 
-#include "PlayerCharacter.h"
+#include "Player/PlayerCharacter.h"
 #include "Components/CapsuleComponent.h"
 
 /////////////////////////////////////////    Constructor      //////////////////////////////////////////////////
@@ -8,6 +8,9 @@ APlayerCharacter::APlayerCharacter()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
+	//GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	//GetCapsuleComponent()->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel2);
+	//GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Overlap);
 
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
@@ -60,10 +63,14 @@ APlayerCharacter::APlayerCharacter()
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> AliveFX_Particle(TEXT("/Game/Characters/Player/Shared/FX/Revival/ParticleSystems/356Days/Revive.Revive"));
 	AliveFX = AliveFX_Particle.Object;
 
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> DeadFX_Particle(TEXT("/Game/Maps/Release/In/Demonstration/Particle/P_Gargoyle_On.P_Gargoyle_On"));
+	DeadFX = DeadFX_Particle.Object;
 
 	//사운드 미리 가져오기
 	static ConstructorHelpers::FObjectFinder<USoundWave> Alive_SoundWave(TEXT("/Game/Characters/Player/Shared/Audio/Shared_Revival_02.Shared_Revival_02"));
 	AliveSound = Alive_SoundWave.Object;
+
+
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -134,8 +141,10 @@ void APlayerCharacter::BeginPlay()
 		int ID = 100;
 		for (TSubclassOf<UGameplayAbility> skill : ExtraSkill)
 		{
-			AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(skill.GetDefaultObject(), 1, ID));
-			ID++;
+			if (skill) {
+				AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(skill.GetDefaultObject(), 1, ID));
+				ID++;
+			}
 		}
 	}
 
@@ -364,7 +373,6 @@ void APlayerCharacter::Multicast_DashPressed_Implementation()
 /////////////////////////////////////////    DashReleased      //////////////////////////////////////////////////
 void APlayerCharacter::DashReleased()
 {
-	
 	ServerRPC_DashReleased();
 }
 
@@ -544,11 +552,13 @@ void APlayerCharacter::ServerRPC_InteractionAction_Implementation()
 }
 
 void APlayerCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
+	UKismetSystemLibrary::PrintString(GetWorld(), TEXT("Interaction_BeginPlay"));
 	if(OtherActor != this)
 		InteractionActor = OtherActor;
 }
 
 void APlayerCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) {
+	UKismetSystemLibrary::PrintString(GetWorld(), TEXT("Interaction_BeginPlay"));
 	InteractionActor = nullptr;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -675,23 +685,6 @@ void APlayerCharacter::MulticastRPC_Invincibility_Implementation(float Time, CC 
 
 
 
-
-/////////////////////////////////////    OnHealthChanged      /////////////////////////////////////////////////
-void APlayerCharacter::OnHealthChanged(float DeltaValue, const struct FGameplayTagContainer& EventTags) {
-	float life = GetAbilitySystemComponent()->GetNumericAttribute(AttributeSet->GetHealthAttribute());
-	if (bIsAlive) {
-		if (life <= 0) {
-			bIsAlive = false;
-			ServerRPC_Dead();
-		}	
-	}
-	else {
-		if (life > 0) {
-			ServerRPC_Alive();
-		}
-	}
-}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////    Dead      /////////////////////////////////////////////////

@@ -1,6 +1,6 @@
 // Team Project D has all rights this game
 
-#include "GA_Resurrection.h"
+#include "Player/GA_Resurrection.h"
 #include "Kismet/GameplayStatics.h"
 #include "UObject/ConstructorHelpers.h"
 

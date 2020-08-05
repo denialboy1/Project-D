@@ -1,6 +1,6 @@
 // Team Project D has all rights this game
 
-#include "ArcherCharacter.h"
+#include "Archer/ArcherCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
 AArcherCharacter::AArcherCharacter() {
@@ -33,9 +33,9 @@ AArcherCharacter::AArcherCharacter() {
 	
 	//아쳐 애님인스턴스 초기화
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
-	static ConstructorHelpers::FObjectFinder<UAnimBlueprint> ArcherAnimInstance(TEXT("/Game/Characters/Player/Archer/ABP_Archer.ABP_Archer"));
-	if (ArcherAnimInstance.Succeeded()) {
-		GetMesh()->SetAnimInstanceClass(ArcherAnimInstance.Object->GetAnimBlueprintGeneratedClass());
+	static ConstructorHelpers::FObjectFinder<UAnimBlueprint> AnimInstance(TEXT("/Game/Characters/Player/Archer/Animation/ABP_Archer.ABP_Archer"));
+	if (AnimInstance.Succeeded()) {
+		GetMesh()->SetAnimInstanceClass(AnimInstance.Object->GetAnimBlueprintGeneratedClass());
 		UE_LOG(LogTemp, Log, TEXT("ArcherAnimInstance Succeed"));
 	}
 	else {
@@ -92,7 +92,7 @@ void AArcherCharacter::AbilityInit() {
 	}
 
 	////Skill3
-	GA_Archer_WeaponAttack = UGA_Archer_Skill3::StaticClass();
+	GA_Archer_Skill3 = UGA_Archer_Skill3::StaticClass();
 	if (GA_Archer_Skill3) {
 		UseSpell3 = GA_Archer_Skill3;
 		UE_LOG(LogTemp, Log, TEXT("GA_Archer_Skill3 Succeed"));
@@ -102,7 +102,7 @@ void AArcherCharacter::AbilityInit() {
 	}
 
 	////Skill4
-	GA_Archer_WeaponAttack = UGA_Archer_Skill4::StaticClass();
+	GA_Archer_Skill4 = UGA_Archer_Skill4::StaticClass();
 	if (GA_Archer_Skill4) {
 		UseSpell4 = GA_Archer_Skill4;
 		UE_LOG(LogTemp, Log, TEXT("GA_Archer_Skill4 Succeed"));
@@ -156,7 +156,9 @@ void AArcherCharacter::BeginPlay() {
 
 /////////////////////////////////////////    Attack      //////////////////////////////////////////////////
 void AArcherCharacter::Attack() {
-	ServerRPC_Attack();
+	if (bIsAim) {
+		ServerRPC_Attack();
+	}
 }
 void AArcherCharacter::ServerRPC_Attack_Implementation() {
 	MulticastRPC_Attack();
@@ -207,8 +209,12 @@ void AArcherCharacter::ServerRPC_SpecialCommandAttackCancel_Implementation() {
 }
 
 void AArcherCharacter::MulticastRPC_SpecialCommandAttackCancel_Implementation() {
-	GetAbilitySystemComponent()->TryActivateAbilityByClass(SpecialCommand);
-	ArcherAnimInstance->bIsReloadPose = false;
+	if (GetAbilitySystemComponent() && SpecialCommand) {
+		GetAbilitySystemComponent()->TryActivateAbilityByClass(SpecialCommand);
+		if (ArcherAnimInstance) {
+			ArcherAnimInstance->bIsReloadPose = false;
+		}
+	}
 	GetCharacterMovement()->MaxWalkSpeed = 600;
 	if (AimWidget) {
 		AimWidget->SetVisibility(ESlateVisibility::Hidden);
@@ -216,3 +222,92 @@ void AArcherCharacter::MulticastRPC_SpecialCommandAttackCancel_Implementation() 
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/////////////////////////////////////////    Skill1      //////////////////////////////////////////////////
+void AArcherCharacter::Skill1() {
+	if (bIsAim) {
+		ServerRPC_Skill1();
+	}
+}
+
+void AArcherCharacter::ServerRPC_Skill1_Implementation()
+{
+	MulticastRPC_Skill1();
+}
+
+void AArcherCharacter::MulticastRPC_Skill1_Implementation() {
+	if (bIsAlive) {
+		GetAbilitySystemComponent()->TryActivateAbilityByClass(UseSpell1);
+	}
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+/////////////////////////////////////////    Skill2      //////////////////////////////////////////////////
+void AArcherCharacter::Skill2() {
+	if (bIsAim) {
+		ServerRPC_Skill2();
+	}
+}
+
+void AArcherCharacter::ServerRPC_Skill2_Implementation()
+{
+	MulticastRPC_Skill2();
+}
+
+void AArcherCharacter::MulticastRPC_Skill2_Implementation() {
+	if (bIsAlive) {
+		GetAbilitySystemComponent()->TryActivateAbilityByClass(UseSpell2);
+	}
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+/////////////////////////////////////////    Skill3      //////////////////////////////////////////////////
+void AArcherCharacter::Skill3() {
+	if (bIsAim) {
+		ServerRPC_Skill3();
+	}
+}
+
+void AArcherCharacter::ServerRPC_Skill3_Implementation()
+{
+	MulticastRPC_Skill3();
+}
+
+void AArcherCharacter::MulticastRPC_Skill3_Implementation() {
+	if (bIsAlive) {
+		GetAbilitySystemComponent()->TryActivateAbilityByClass(UseSpell3);
+	}
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+//////////////////////////////////////    Skill4      /////////////////////////////////////////////////
+void AArcherCharacter::Skill4() {
+	if (bIsAim) {
+		ServerRPC_Skill4();
+	}
+}
+
+void AArcherCharacter::ServerRPC_Skill4_Implementation()
+{
+	MulticastRPC_Skill4();
+}
+
+void AArcherCharacter::MulticastRPC_Skill4_Implementation() {
+	if (bIsAlive) {
+		GetAbilitySystemComponent()->TryActivateAbilityByClass(UseSpell4);
+	}
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+

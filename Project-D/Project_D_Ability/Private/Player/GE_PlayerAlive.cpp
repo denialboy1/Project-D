@@ -1,6 +1,6 @@
 // Team Project D has all rights this game
 
-#include "GE_PlayerAlive.h"
+#include "Player/GE_PlayerAlive.h"
 #include "AttributeSet_Character.h"
 
 UGE_PlayerAlive::UGE_PlayerAlive() {

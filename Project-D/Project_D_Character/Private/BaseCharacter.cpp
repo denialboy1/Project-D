@@ -84,10 +84,11 @@ float ABaseCharacter::GetMoveSpeed() const
 	return AttributeSet->GetMoveSpeed();
 }
 
+/*
 void ABaseCharacter::OnHealthChanged(float DeltaValue, const struct FGameplayTagContainer& EventTags) {
 
 }
-
+*/
 //void ABaseCharacter::HandleHealthChanged(float DeltaValue, const struct FGameplayTagContainer& EventTags)
 //{
 //	// We only call the BP callback if this is not the initial ability setup
